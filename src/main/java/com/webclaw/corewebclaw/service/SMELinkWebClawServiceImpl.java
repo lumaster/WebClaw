@@ -63,7 +63,7 @@ public class SMELinkWebClawServiceImpl implements WebClawService {
                 Document doc = Jsoup.parse(content);
                 if (!content.contains("</html>") || doc.select(".fontCompany").isEmpty()) {
 //                    System.out.println("Skip: " + path);
-                    company.setPath(path.getFileName().toString());
+                    company.setPath(path.toString());
                     company.setGenStatus(0);
                     companyRepository.save(company);
                     continue;
@@ -130,7 +130,7 @@ public class SMELinkWebClawServiceImpl implements WebClawService {
                 company.setBusinessType(format(businessType));
                 company.setBusinessSize(format(businessSize));
                 company.setPhoneNumber(format(phoneNumber));
-                company.setPath(path.getFileName().toString());
+                company.setPath(path.toString());
                 company.setGenStatus(1);
                 companyRepository.save(company);
                 //companyList.add(company);
