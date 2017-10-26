@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public interface WebClawService {
 
-    public void exportData(int limitLoop) throws IOException;
+    void exportData() throws IOException;
 
 }

@@ -30,18 +30,19 @@ public class SMELinkWebClawServiceImpl implements WebClawService {
     private String outputFolderPath;
 
     @Autowired
+    private LogService logService;
+
+    @Autowired
     private CompanyRepository companyRepository;
 
-    public void exportData(int limitLoop) throws IOException {
-        int loopIndex = 0;
-        int iteratorCount = 0;
-        boolean isNotRunAll = limitLoop != 0 ? true : false;
+    public void exportData() throws IOException {
+        logService.logEvent("SMELINK_PROCESSING");
+        logService.logInfo("Start processing file");
         Path pathMain = Paths.get(folderPath);
         Iterator<Path> iterator = Files.walk(pathMain)
                 .filter(path -> path.getFileName().toString().contains(".html") || path.getFileName().toString()
                         .contains(".html.tmp")).iterator();
         while (iterator.hasNext()) {
-            iteratorCount++;
             Path path = iterator.next();
             if (Files.isRegularFile(path)) {
 
@@ -62,18 +63,12 @@ public class SMELinkWebClawServiceImpl implements WebClawService {
                 String content = new String(Files.readAllBytes(path));
                 Document doc = Jsoup.parse(content);
                 if (!content.contains("</html>") || doc.select(".fontCompany").isEmpty()) {
-//                    System.out.println("Skip: " + path);
                     company.setPath(path.toString());
                     company.setGenStatus(0);
                     companyRepository.save(company);
                     continue;
                 }
 
-                if (isNotRunAll && loopIndex >= limitLoop) {
-                    break;
-                }
-                loopIndex++;
-//                System.out.println("loaded: " + path);
                 companyThaiName = doc.select(".fontCompany").first().childNode(0).toString();
                 companyEnglishName = doc.select(".fontCompany").first().childNode(2).toString();
                 Elements select = doc.select(".fontCompanyProfile");
@@ -133,12 +128,10 @@ public class SMELinkWebClawServiceImpl implements WebClawService {
                 company.setPath(path.toString());
                 company.setGenStatus(1);
                 companyRepository.save(company);
-                //companyList.add(company);
             }
         }
 
-        System.out.println(String.format("System found %s files in html and html.tmp type", iteratorCount));
-        System.out.println(String.format("System had been clawed only for %s file", loopIndex));
+        logService.logInfo("Done!!");
 
     }
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <appender name="Console_appender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%date{YYYY-MM-dd HH:mm:ss:SSS}]:%mdc{event}:%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="Rolling_file_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>claw.smelink.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%date{YYYY-MM-dd HH:mm:ss:SSS}]:%mdc{event}:%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="ERROR">
+        <!--<appender-ref ref="Rolling_file_appender"/>-->
+        <appender-ref ref="Rolling_file_appender"/>
+    </root>
+    <logger name="claw.logger" level="INFO" additivity="false">
+        <!--<appender-ref ref="Rolling_file_appender"/>-->
+        <appender-ref ref="Rolling_file_appender"/>
+    </logger>
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <!--<appender-ref ref="Rolling_file_appender"/>-->
+        <appender-ref ref="Rolling_file_appender"/>
+    </logger>
+</configuration>
