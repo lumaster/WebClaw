@@ -93,7 +93,18 @@ public class SMELinkWebClawServiceImpl implements WebClawService {
                             companyStatus = select.get(3).childNode(1).toString();
                             break;
                         case 4:
-                            registeredCapital = new BigDecimal(format(select.get(4).childNode(1).toString()));
+                            String number = format(select.get(4).childNode(1).toString());
+                            if (number != null) {
+
+                                try {
+                                    registeredCapital = new BigDecimal(number);
+                                } catch (NumberFormatException e) {
+                                    registeredCapital = BigDecimal.ZERO;
+                                }
+
+                            } else {
+                                registeredCapital = BigDecimal.ZERO;
+                            }
                             break;
                         case 5:
                             address = select.get(5).childNode(1).toString();
